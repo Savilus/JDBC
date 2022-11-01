@@ -23,13 +23,13 @@ public class Workshop1 {
         System.out.println("Miasta podanego przez ciebie kraju to: " + cities);
     }
 
-    public static List<City> getCities(String query) {
+    public static List<String> getCities(String query) {
         if (query == null || query.isBlank() || query.length() < 2){
             return Collections.emptyList();
         }
-        List<City> cities = new LinkedList<>();
+        List<String> cities = new LinkedList<>();
         try(final Connection connection = DriverManager.getConnection(DB_CONNECTION.getValue(), DB_USER.getValue(),
-                DB_PASSWORD.getValue());){
+                DB_PASSWORD.getValue())){
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT ci.city FROM city as ci " +
                     "JOIN country as co ON ci.country_id = co.country_id " +
                     "WHERE UPPER(co.country) LIKE UPPER(?);");
@@ -38,8 +38,7 @@ public class Workshop1 {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()){
-                City city = new City(resultSet.getString(1));
-                cities.add(city);
+                cities.add(resultSet.getString(1));
             }
 
         }catch (SQLException e){
